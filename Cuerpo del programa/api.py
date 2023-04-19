@@ -15,53 +15,53 @@ class ModeloCliente(BaseModel): # creo la clase ModeloCliente que hereda de Base
 
 
 class ModeloCrearCliente(ModeloCliente): # creo la clase ModeloCrearCliente que hereda de ModeloCliente para validar los datos que recibo y ademas creo un validador para validar el dni 
-    @validator("dni")
-    def validar_dni(cls, dni):
-        if not helpers.dni_valido(dni, db.Clientes.lista):
-            raise ValueError("Cliente ya existente o DNI incorrecto")
-        return dni
+    @validator("CD")
+    def validar_CD(cls, CD):
+        if not helpers.dni_valido(CD, db.Inventario.lista):
+            raise ValueError("Cliente ya existente o CD incorrecto")
+        return CD
 
 # creo la para instanciar la clase FastAPI y le paso los parametros que quiero que tenga la API
 app = FastAPI( # creo la app para instanciar la clase FastAPI
-    title="API del Gestor de clientes",
-    description="Ofrece diferentes funciones para gestionar los clientes.")
+    title="API del Gestor de Inventario",
+    description="Ofrece diferentes funciones para gestionar el Inventario.")
 
 # creo las rutas para cada funcion que cree en database.py, le paso los parametros que quiero que tenga la ruta y le paso la funcion que quiero que ejecute
-@app.get("/clientes/", tags=["Clientes"]) # creo la ruta para la funcion clientes
-async def clientes():
-    content = [cliente.to_dict() for cliente in db.Clientes.lista]
+@app.get("/Inventario/", tags=["Inventario"]) # creo la ruta para la funcion Inventario
+async def Inventario():
+    content = [cliente.to_dict() for cliente in db.Inventario.lista]
     return JSONResponse(content=content, headers=headers)
 
 
-@app.get("/clientes/buscar/{dni}/", tags=["Clientes"]) 
-async def clientes_buscar(dni: str):
-    cliente = db.Clientes.buscar(dni=dni)
+@app.get("/Inventario/buscar/{CD}/", tags=["Inventario"]) 
+async def Inventario_buscar(CD: str):
+    cliente = db.Inventario.buscar(CD=CD)
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
     return JSONResponse(content=cliente.to_dict(), headers=headers)
 
 
-@app.post("/clientes/crear/", tags=["Clientes"])
-async def clientes_crear(datos: ModeloCrearCliente):
-    cliente = db.Clientes.crear(datos.dni, datos.nombre, datos.apellido)
+@app.post("/Inventario/crear/", tags=["Inventario"])
+async def Inventario_crear(datos: ModeloCrearCliente):
+    cliente = db.Inventario.crear(datos.CD, datos.Producto, datos.apellido)
     if cliente:
         return JSONResponse(content=cliente.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
 
 
-@ app.put("/clientes/actualizar/", tags=["Clientes"])
-async def clientes_actualizar(datos: ModeloCliente):
-    if db.Clientes.buscar(datos.dni):
-        cliente = db.Clientes.modificar(datos.dni, datos.nombre, datos.apellido)
+@ app.put("/Inventario/actualizar/", tags=["Inventario"])
+async def Inventario_actualizar(datos: ModeloCliente):
+    if db.Inventario.buscar(datos.CD):
+        cliente = db.Inventario.modificar(datos.CD, datos.Producto, datos.apellido)
         if cliente:
             return JSONResponse(content=cliente.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
 
 
-@app.delete("/clientes/borrar/{dni}/", tags=["Clientes"])
-async def clientes_borrar(dni: str):
-    if db.Clientes.buscar(dni=dni):
-        cliente = db.Clientes.borrar(dni=dni)
+@app.delete("/Inventario/borrar/{CD}/", tags=["Inventario"])
+async def Inventario_borrar(CD: str):
+    if db.Inventario.buscar(CD=CD):
+        cliente = db.Clientes.borrar(CD=CD)
         return JSONResponse(content=cliente.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
 
