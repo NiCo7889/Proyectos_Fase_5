@@ -25,3 +25,8 @@ python run.py -t
 ```bash
 python -m pytest -v
 ```
+
+Nombre == Producto
+DNI == CD
+Apellido == categoria
+Clientes == Inventario
