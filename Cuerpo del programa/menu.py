@@ -30,7 +30,7 @@ def iniciar(): # Función que inicia el programa y muestra el menú
             print("Buscando un producto...\n")
             CD = helpers.leer_texto(3, 3, "CD (2 int y 1 char)").upper()
             Producto = db.Inventario.buscar(CD)
-            print(cliente) if cliente else print("Producto no encontrado.")
+            print(Producto) if Producto else print("Producto no encontrado.")
 
         elif opcion == '3':
             print("Añadiendo un producto...\n")
@@ -41,21 +41,21 @@ def iniciar(): # Función que inicia el programa y muestra el menú
                 if helpers.CD_valido(CD, db.Inventario.lista):
                     break
 
-            Producto = helpers.leer_texto(2, 30, "Nombre (de 2 a 30 chars)").capitalize()
+            Producto = helpers.leer_texto(2, 30, "Producto (de 2 a 30 chars)").capitalize()
             categoria = helpers.leer_texto(2, 30, "categoria (de 2 a 30 chars)").capitalize()
             db.Inventario.crear(CD, Producto, categoria)
             print("Producto añadido correctamente.")
 
         elif opcion == '4':
-            print("Modificando un cliente...\n")
+            print("Modificando un Producto...\n")
             CD = helpers.leer_texto(3, 3, "CD (2 int y 1 char)").upper()
-            cliente = db.Inventario.buscar(CD)
-            if cliente:
+            Producto = db.Inventario.buscar(CD)
+            if Producto:
                 Producto = helpers.leer_texto(
-                    2, 30, f"Nombre (de 2 a 30 chars) [{cliente.Producto}]").capitalize()
+                    2, 30, f"Nombre (de 2 a 30 chars) [{Producto.Producto}]").capitalize()
                 categoria = helpers.leer_texto(
-                    2, 30, f"categoria (de 2 a 30 chars) [{cliente.categoria}]").capitalize()
-                db.Inventario.modificar(cliente.CD, Producto, categoria)
+                    2, 30, f"categoria (de 2 a 30 chars) [{Producto.categoria}]").capitalize()
+                db.Inventario.modificar(Producto.CD, Producto, categoria)
                 print("Cliente modificado correctamente.")
             else:
                 print("Cliente no encontrado.")

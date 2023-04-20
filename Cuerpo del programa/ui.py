@@ -20,7 +20,7 @@ class CenterWidgetMixin: # creo la clase CenterWidgetMixin que me permite centra
 class CreateClientWindow(Toplevel, CenterWidgetMixin): # creo la clase CreateClientWindow que hereda de Toplevel y CenterWidgetMixin que me permite crear una ventana para crear un cliente
     def __init__(self, parent):
         super().__init__(parent)
-        self.title("Crear cliente")
+        self.title("Crear Producto")
         self.build()
         self.center()
         self.transient(parent)
@@ -82,7 +82,7 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin): # creo la clase CreateCli
 class EditClientWindow(Toplevel, CenterWidgetMixin): # creo la clase EditClientWindow que hereda de Toplevel y CenterWidgetMixin que me permite crear una ventana para editar un cliente 
     def __init__(self, parent):
         super().__init__(parent)
-        self.title("Actualizar cliente")
+        self.title("Actualizar Producto")
         self.build()
         self.center()
         self.transient(parent)
@@ -125,9 +125,9 @@ class EditClientWindow(Toplevel, CenterWidgetMixin): # creo la clase EditClientW
         self.Producto = Producto
         self.categoria = categoria
 
-    def edit_client(self):
-        cliente = self.master.treeview.focus()
-        self.master.treeview.item(cliente, values=(
+    def edit_Producto(self):
+        Producto = self.master.treeview.focus()
+        self.master.treeview.item(Producto, values=(
             self.CD.get(), self.Producto.get(), self.categoria.get()))
         db.Clientes.modificar(self.CD.get(), self.Producto.get(), self.categoria.get())
         self.close()
@@ -148,7 +148,7 @@ class EditClientWindow(Toplevel, CenterWidgetMixin): # creo la clase EditClientW
 class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda de Tk y CenterWidgetMixin que me permite crear una ventana principal
     def __init__(self):
         super().__init__()
-        self.title("Gestor de clientes")
+        self.title("Gestor de Inventario")
         self.build()
         self.center()
 
@@ -161,7 +161,7 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
 
         treeview.column("#0", width=0, stretch=NO)
         treeview.column("CD", anchor=CENTER)
-        treeview.column("Nombre", anchor=CENTER)
+        treeview.column("Producto", anchor=CENTER)
         treeview.column("categoria", anchor=CENTER)
 
         treeview.heading("CD", text="DNI", anchor=CENTER)
@@ -172,10 +172,10 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
         scrollbar.pack(side=RIGHT, fill=Y)
         treeview['yscrollcommand'] = scrollbar.set
 
-        for cliente in db.Inventario.lista:
+        for Producto in db.Inventario.lista:
             treeview.insert(
-                parent='', index='end', iid=cliente.CD,
-                values=(cliente.CD, cliente.Producto, cliente.categoria))
+                parent='', index='end', iid=Producto.CD,
+                values=(Producto.CD, Producto.Producto, Producto.categoria))
 
         treeview.pack()
 
@@ -189,15 +189,15 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
         self.treeview = treeview
 
     def delete(self):
-        cliente = self.treeview.focus()
-        if cliente:
-            campos = self.treeview.item(cliente, "values")
+        Producto = self.treeview.focus()
+        if Producto:
+            campos = self.treeview.item(Producto, "values")
             confirmar = askokcancel(
                 title="Confirmar borrado",
                 message=f"¿Borrar {campos[1]} {campos[2]}?",
                 icon=WARNING)
             if confirmar:
-                self.treeview.delete(cliente)
+                self.treeview.delete(Producto)
                 db.Inventario.borrar(campos[0])
 
     def create(self):

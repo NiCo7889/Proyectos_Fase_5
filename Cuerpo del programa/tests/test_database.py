@@ -17,10 +17,10 @@ class TestDatabase(unittest.TestCase):
         ]
 
     def test_buscar_Producto(self):
-        cliente_existente = db.Inventario.buscar('15J')
-        cliente_inexistente = db.Inventario.buscar('99X')
-        self.assertIsNotNone(cliente_existente)
-        self.assertIsNone(cliente_inexistente)
+        Producto_existente = db.Inventario.buscar('15J')
+        Producto_inexistente = db.Inventario.buscar('99X')
+        self.assertIsNotNone(Producto_existente)
+        self.assertIsNone(Producto_inexistente)
 
     def test_crear_Producto(self):
         nuevo_Producto = db.Inventario.crear('39X', 'Héctor', 'Costa')

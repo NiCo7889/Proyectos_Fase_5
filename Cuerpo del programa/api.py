@@ -61,8 +61,8 @@ async def Inventario_actualizar(datos: ModeloCliente):
 @app.delete("/Inventario/borrar/{CD}/", tags=["Inventario"])
 async def Inventario_borrar(CD: str):
     if db.Inventario.buscar(CD=CD):
-        cliente = db.Clientes.borrar(CD=CD)
-        return JSONResponse(content=cliente.to_dict(), headers=headers)
+        Producto = db.Inventario.borrar(CD=CD)
+        return JSONResponse(content=Producto.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
 
 print("Servidor de la API...")
