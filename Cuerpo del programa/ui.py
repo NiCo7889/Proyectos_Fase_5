@@ -30,19 +30,19 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin): # creo la clase CreateCli
         frame = Frame(self)
         frame.pack(padx=20, pady=10)
 
-        Label(frame, text="DNI (2 ints y 1 upper char)").grid(row=0, column=0)
+        Label(frame, text="CD (2 ints y 1 upper char)").grid(row=0, column=0)
         Label(frame, text="Producto (de 2 a 30 chars)").grid(row=0, column=1)
-        Label(frame, text="Apellido (de 2 a 30 chars)").grid(row=0, column=2)
+        Label(frame, text="categoria (de 2 a 30 chars)").grid(row=0, column=2)
 
-        dni = Entry(frame)
-        dni.grid(row=1, column=0)
-        dni.bind("<KeyRelease>", lambda event: self.validate(event, 0))
+        CD = Entry(frame)
+        CD.grid(row=1, column=0)
+        CD.bind("<KeyRelease>", lambda event: self.validate(event, 0))
         Producto = Entry(frame)
         Producto.grid(row=1, column=1)
         Producto.bind("<KeyRelease>", lambda event: self.validate(event, 1))
-        apellido = Entry(frame)
-        apellido.grid(row=1, column=2)
-        apellido.bind("<KeyRelease>", lambda event: self.validate(event, 2))
+        categoria = Entry(frame)
+        categoria.grid(row=1, column=2)
+        categoria.bind("<KeyRelease>", lambda event: self.validate(event, 2))
 
         frame = Frame(self)
         frame.pack(pady=10)
@@ -54,15 +54,15 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin): # creo la clase CreateCli
 
         self.validaciones = [0, 0, 0]
         self.crear = crear
-        self.dni = dni
+        self.CD = CD
         self.Producto = Producto
-        self.apellido = apellido
+        self.categoria = categoria
 
     def create_client(self):
         self.master.treeview.insert(
-            parent='', index='end', iid=self.dni.get(),
-            values=(self.dni.get(), self.Producto.get(), self.apellido.get()))
-        db.Inventario.crear(self.dni.get(), self.Producto.get(), self.apellido.get())
+            parent='', index='end', iid=self.CD.get(),
+            values=(self.CD.get(), self.Producto.get(), self.categoria.get()))
+        db.Inventario.crear(self.CD.get(), self.Producto.get(), self.categoria.get())
         self.close()
 
     def close(self):
@@ -71,7 +71,7 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin): # creo la clase CreateCli
 
     def validate(self, event, index):
         valor = event.widget.get()
-        valido = helpers.dni_valido(valor, db.Inventario.lista) if index == 0 \
+        valido = helpers.CD_valido(valor, db.Inventario.lista) if index == 0 \
             else (valor.isalpha() and len(valor) >= 2 and len(valor) <= 30)
         event.widget.configure({"bg": "Green" if valido else "Red"})
         # Cambiar el estado del botón en base a las validaciones
@@ -92,25 +92,25 @@ class EditClientWindow(Toplevel, CenterWidgetMixin): # creo la clase EditClientW
         frame = Frame(self)
         frame.pack(padx=20, pady=10)
 
-        Label(frame, text="DNI (no editable)").grid(row=0, column=0)
+        Label(frame, text="CD (no editable)").grid(row=0, column=0)
         Label(frame, text="Producto (de 2 a 30 chars)").grid(row=0, column=1)
-        Label(frame, text="Apellido (de 2 a 30 chars)").grid(row=0, column=2)
+        Label(frame, text="categoria (de 2 a 30 chars)").grid(row=0, column=2)
 
-        dni = Entry(frame)
-        dni.grid(row=1, column=0)
+        CD = Entry(frame)
+        CD.grid(row=1, column=0)
         Producto = Entry(frame)
         Producto.grid(row=1, column=1)
         Producto.bind("<KeyRelease>", lambda event: self.validate(event, 0))
-        apellido = Entry(frame)
-        apellido.grid(row=1, column=2)
-        apellido.bind("<KeyRelease>", lambda event: self.validate(event, 1))
+        categoria = Entry(frame)
+        categoria.grid(row=1, column=2)
+        categoria.bind("<KeyRelease>", lambda event: self.validate(event, 1))
 
         cliente = self.master.treeview.focus()
         campos = self.master.treeview.item(cliente, 'values')
-        dni.insert(0, campos[0])
-        dni.config(state=DISABLED)
+        CD.insert(0, campos[0])
+        CD.config(state=DISABLED)
         Producto.insert(0, campos[1])
-        apellido.insert(0, campos[2])
+        categoria.insert(0, campos[2])
 
         frame = Frame(self)
         frame.pack(pady=10)
@@ -121,15 +121,15 @@ class EditClientWindow(Toplevel, CenterWidgetMixin): # creo la clase EditClientW
 
         self.validaciones = [1, 1]
         self.actualizar = actualizar
-        self.dni = dni
+        self.CD = CD
         self.Producto = Producto
-        self.apellido = apellido
+        self.categoria = categoria
 
     def edit_client(self):
         cliente = self.master.treeview.focus()
         self.master.treeview.item(cliente, values=(
-            self.dni.get(), self.Producto.get(), self.apellido.get()))
-        db.Clientes.modificar(self.dni.get(), self.Producto.get(), self.apellido.get())
+            self.CD.get(), self.Producto.get(), self.categoria.get()))
+        db.Clientes.modificar(self.CD.get(), self.Producto.get(), self.categoria.get())
         self.close()
 
     def close(self):
@@ -157,16 +157,16 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
         frame.pack()
 
         treeview = ttk.Treeview(frame)
-        treeview['columns'] = ('DNI', 'Producto', 'Apellido')
+        treeview['columns'] = ('CD', 'Producto', 'categoria')
 
         treeview.column("#0", width=0, stretch=NO)
-        treeview.column("DNI", anchor=CENTER)
+        treeview.column("CD", anchor=CENTER)
         treeview.column("Nombre", anchor=CENTER)
-        treeview.column("Apellido", anchor=CENTER)
+        treeview.column("categoria", anchor=CENTER)
 
-        treeview.heading("DNI", text="DNI", anchor=CENTER)
+        treeview.heading("CD", text="DNI", anchor=CENTER)
         treeview.heading("Producto", text="Producto", anchor=CENTER)
-        treeview.heading("Apellido", text="Apellido", anchor=CENTER)
+        treeview.heading("categoria", text="categoria", anchor=CENTER)
 
         scrollbar = Scrollbar(frame)
         scrollbar.pack(side=RIGHT, fill=Y)
@@ -174,8 +174,8 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
 
         for cliente in db.Inventario.lista:
             treeview.insert(
-                parent='', index='end', iid=cliente.dni,
-                values=(cliente.dni, cliente.Producto, cliente.apellido))
+                parent='', index='end', iid=cliente.CD,
+                values=(cliente.CD, cliente.Producto, cliente.categoria))
 
         treeview.pack()
 

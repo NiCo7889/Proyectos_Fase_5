@@ -42,8 +42,8 @@ def iniciar(): # Función que inicia el programa y muestra el menú
                     break
 
             Producto = helpers.leer_texto(2, 30, "Nombre (de 2 a 30 chars)").capitalize()
-            apellido = helpers.leer_texto(2, 30, "Apellido (de 2 a 30 chars)").capitalize()
-            db.Inventario.crear(CD, Producto, apellido)
+            categoria = helpers.leer_texto(2, 30, "categoria (de 2 a 30 chars)").capitalize()
+            db.Inventario.crear(CD, Producto, categoria)
             print("Producto añadido correctamente.")
 
         elif opcion == '4':
@@ -53,9 +53,9 @@ def iniciar(): # Función que inicia el programa y muestra el menú
             if cliente:
                 Producto = helpers.leer_texto(
                     2, 30, f"Nombre (de 2 a 30 chars) [{cliente.Producto}]").capitalize()
-                apellido = helpers.leer_texto(
-                    2, 30, f"Apellido (de 2 a 30 chars) [{cliente.apellido}]").capitalize()
-                db.Inventario.modificar(cliente.CD, Producto, apellido)
+                categoria = helpers.leer_texto(
+                    2, 30, f"categoria (de 2 a 30 chars) [{cliente.categoria}]").capitalize()
+                db.Inventario.modificar(cliente.CD, Producto, categoria)
                 print("Cliente modificado correctamente.")
             else:
                 print("Cliente no encontrado.")

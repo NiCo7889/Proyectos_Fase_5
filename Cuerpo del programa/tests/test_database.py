@@ -11,55 +11,55 @@ class TestDatabase(unittest.TestCase):
     def setUp(self):
         # Se ejecuta antes de cada prueba
         db.Inventario.lista = [
-            db.Cliente('15J', 'Marta', 'Pérez'),
-            db.Cliente('48H', 'Manolo', 'López'),
-            db.Cliente('28Z', 'Ana', 'García')
+            db.Producto('15J', 'Marta', 'Pérez'),
+            db.Producto('48H', 'Manolo', 'López'),
+            db.Producto('28Z', 'Ana', 'García')
         ]
 
-    def test_buscar_cliente(self):
+    def test_buscar_Producto(self):
         cliente_existente = db.Inventario.buscar('15J')
         cliente_inexistente = db.Inventario.buscar('99X')
         self.assertIsNotNone(cliente_existente)
         self.assertIsNone(cliente_inexistente)
 
-    def test_crear_cliente(self):
-        nuevo_cliente = db.Inventario.crear('39X', 'Héctor', 'Costa')
+    def test_crear_Producto(self):
+        nuevo_Producto = db.Inventario.crear('39X', 'Héctor', 'Costa')
         self.assertEqual(len(db.Inventario.lista), 4)
-        self.assertEqual(nuevo_cliente.dni, '39X')
-        self.assertEqual(nuevo_cliente.Producto, 'Héctor')
-        self.assertEqual(nuevo_cliente.apellido, 'Costa')
+        self.assertEqual(nuevo_Producto.CD, '39X')
+        self.assertEqual(nuevo_Producto.Producto, 'Héctor')
+        self.assertEqual(nuevo_Producto.categoria, 'Costa')
 
-    def test_modificar_cliente(self):
-        cliente_a_modificar = copy.copy(db.Inventario.buscar('28Z'))
-        cliente_modificado = db.Inventario.modificar('28Z', 'Mariana', 'García')
-        self.assertEqual(cliente_a_modificar.Producto, 'Ana')
-        self.assertEqual(cliente_modificado.Producto, 'Mariana')
+    def test_modificar_Producto(self):
+        Producto_a_modificar = copy.copy(db.Inventario.buscar('28Z'))
+        Producto_modificado = db.Inventario.modificar('28Z', 'Mariana', 'García')
+        self.assertEqual(Producto_a_modificar.Producto, 'Ana')
+        self.assertEqual(Producto_modificado.Producto, 'Mariana')
 
-    def test_borrar_cliente(self):
+    def test_borrar_Producto(self):
         cliente_borrado = db.Inventario.borrar('48H')
         cliente_rebuscado = db.Inventario.buscar('48H')
-        self.assertEqual(cliente_borrado.dni, '48H')
+        self.assertEqual(cliente_borrado.CD, '48H')
         self.assertIsNone(cliente_rebuscado)
 
     def test_dni_valido(self):
-        self.assertTrue(helpers.dni_valido('00A', db.Inventario.lista))
-        self.assertFalse(helpers.dni_valido('232323S', db.Inventario.lista))
-        self.assertFalse(helpers.dni_valido('F35', db.Inventario.lista))
-        self.assertFalse(helpers.dni_valido('48H', db.Inventario.lista))
+        self.assertTrue(helpers.CD_valido('00A', db.Inventario.lista))
+        self.assertFalse(helpers.CD_valido('232323S', db.Inventario.lista))
+        self.assertFalse(helpers.CD_valido('F35', db.Inventario.lista))
+        self.assertFalse(helpers.CD_valido('48H', db.Inventario.lista))
 
     def test_escritura_csv(self):
         db.Inventario.borrar('48H')
         db.Inventario.borrar('15J')
         db.Inventario.modificar('28Z', 'Mariana', 'García')
 
-        dni, nombre, apellido = None, None, None
+        CD, Producto, categoria = None, None, None
         with open(config.DATABASE_PATH, newline='\n') as fichero:
             reader = csv.reader(fichero, delimiter=';')
-            dni, Producto, apellido = next(reader)
+            CD, Producto, categoria = next(reader)
 
-        self.assertEqual(dni, '28Z')
+        self.assertEqual(CD, '28Z')
         self.assertEqual(Producto, 'Mariana')
-        self.assertEqual(apellido, 'García')
+        self.assertEqual(categoria, 'García')
 
 
 if __name__ == '__main__':
