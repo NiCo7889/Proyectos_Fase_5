@@ -9,9 +9,9 @@ headers = {"content-type": "charset=utf-8"} # creo un diccionario con los header
 
 
 class ModeloCliente(BaseModel): # creo la clase ModeloCliente que hereda de BaseModel para validar los datos que recibo
-    dni: constr(min_length=3, max_length=3)
+    CD: constr(min_length=3, max_length=3)
     Producto: constr(min_length=2, max_length=30)
-    apellido: constr(min_length=2, max_length=30)
+    categoria: constr(min_length=2, max_length=30)
 
 
 class ModeloCrearCliente(ModeloCliente): # creo la clase ModeloCrearCliente que hereda de ModeloCliente para validar los datos que recibo y ademas creo un validador para validar el dni 
