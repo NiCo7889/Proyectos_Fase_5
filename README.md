@@ -5,7 +5,7 @@
 _Nota: Sólo incluye pytest para realizar pruebas unitarias._
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirement.txt
 ```
 
 ## Para probar el programa en modo gráfico

@@ -19,8 +19,8 @@ def CD_valido(CD, lista): # creo la funcion dni_valido que me permite validar qu
     if not re.match('[0-9]{2}[A-Z]$', CD):
         print("CD incorrecto, debe cumplir el formato.")
         return False
-    for Producto in lista:
-        if Producto.CD == CD:
+    for producto in lista:
+        if producto.CD == CD:
             print("CD utilizado por otro Producto.")
             return False
     return True

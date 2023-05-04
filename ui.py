@@ -37,9 +37,9 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin): # creo la clase CreateCli
         CD = Entry(frame)
         CD.grid(row=1, column=0)
         CD.bind("<KeyRelease>", lambda event: self.validate(event, 0))
-        Producto = Entry(frame)
-        Producto.grid(row=1, column=1)
-        Producto.bind("<KeyRelease>", lambda event: self.validate(event, 1))
+        producto = Entry(frame)
+        producto.grid(row=1, column=1)
+        producto.bind("<KeyRelease>", lambda event: self.validate(event, 1))
         categoria = Entry(frame)
         categoria.grid(row=1, column=2)
         categoria.bind("<KeyRelease>", lambda event: self.validate(event, 2))
@@ -55,14 +55,14 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin): # creo la clase CreateCli
         self.validaciones = [0, 0, 0]
         self.crear = crear
         self.CD = CD
-        self.Producto = Producto
+        self.producto = producto
         self.categoria = categoria
 
     def create_client(self):
         self.master.treeview.insert(
             parent='', index='end', iid=self.CD.get(),
-            values=(self.CD.get(), self.Producto.get(), self.categoria.get()))
-        db.Inventario.crear(self.CD.get(), self.Producto.get(), self.categoria.get())
+            values=(self.CD.get(), self.producto.get(), self.categoria.get()))
+        db.Inventario.crear(self.CD.get(), self.producto.get(), self.categoria.get())
         self.close()
 
     def close(self):
@@ -98,9 +98,9 @@ class EditClientWindow(Toplevel, CenterWidgetMixin): # creo la clase EditClientW
 
         CD = Entry(frame)
         CD.grid(row=1, column=0)
-        Producto = Entry(frame)
-        Producto.grid(row=1, column=1)
-        Producto.bind("<KeyRelease>", lambda event: self.validate(event, 0))
+        producto = Entry(frame)
+        producto.grid(row=1, column=1)
+        producto.bind("<KeyRelease>", lambda event: self.validate(event, 0))
         categoria = Entry(frame)
         categoria.grid(row=1, column=2)
         categoria.bind("<KeyRelease>", lambda event: self.validate(event, 1))
@@ -109,7 +109,7 @@ class EditClientWindow(Toplevel, CenterWidgetMixin): # creo la clase EditClientW
         campos = self.master.treeview.item(cliente, 'values')
         CD.insert(0, campos[0])
         CD.config(state=DISABLED)
-        Producto.insert(0, campos[1])
+        producto.insert(0, campos[1])
         categoria.insert(0, campos[2])
 
         frame = Frame(self)
@@ -122,14 +122,14 @@ class EditClientWindow(Toplevel, CenterWidgetMixin): # creo la clase EditClientW
         self.validaciones = [1, 1]
         self.actualizar = actualizar
         self.CD = CD
-        self.Producto = Producto
+        self.producto = producto
         self.categoria = categoria
 
     def edit_Producto(self):
-        Producto = self.master.treeview.focus()
-        self.master.treeview.item(Producto, values=(
-            self.CD.get(), self.Producto.get(), self.categoria.get()))
-        db.Clientes.modificar(self.CD.get(), self.Producto.get(), self.categoria.get())
+        producto = self.master.treeview.focus()
+        self.master.treeview.item(producto, values=(
+            self.CD.get(), self.producto.get(), self.categoria.get()))
+        db.Clientes.modificar(self.CD.get(), self.producto.get(), self.categoria.get())
         self.close()
 
     def close(self):
@@ -172,10 +172,10 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
         scrollbar.pack(side=RIGHT, fill=Y)
         treeview['yscrollcommand'] = scrollbar.set
 
-        for Producto in db.Inventario.lista:
+        for producto in db.Inventario.lista:
             treeview.insert(
-                parent='', index='end', iid=Producto.CD,
-                values=(Producto.CD, Producto.Producto, Producto.categoria))
+                parent='', index='end', iid=producto.CD,
+                values=(producto.CD, producto.producto, producto.categoria))
 
         treeview.pack()
 
@@ -189,15 +189,15 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
         self.treeview = treeview
 
     def delete(self):
-        Producto = self.treeview.focus()
-        if Producto:
-            campos = self.treeview.item(Producto, "values")
+        producto = self.treeview.focus()
+        if producto:
+            campos = self.treeview.item(producto, "values")
             confirmar = askokcancel(
                 title="Confirmar borrado",
                 message=f"¿Borrar {campos[1]} {campos[2]}?",
                 icon=WARNING)
             if confirmar:
-                self.treeview.delete(Producto)
+                self.treeview.delete(producto)
                 db.Inventario.borrar(campos[0])
 
     def create(self):

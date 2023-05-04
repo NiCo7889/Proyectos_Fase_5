@@ -17,7 +17,7 @@ class ModeloCliente(BaseModel): # creo la clase ModeloCliente que hereda de Base
 class ModeloCrearCliente(ModeloCliente): # creo la clase ModeloCrearCliente que hereda de ModeloCliente para validar los datos que recibo y ademas creo un validador para validar el dni 
     @validator("CD")
     def validar_CD(cls, CD):
-        if not helpers.dni_valido(CD, db.Inventario.lista):
+        if not helpers.CD_valido(CD, db.Inventario.lista):
             raise ValueError("Producto ya existente o CD incorrecto")
         return CD
 
@@ -29,40 +29,40 @@ app = FastAPI( # creo la app para instanciar la clase FastAPI
 # creo las rutas para cada funcion que cree en database.py, le paso los parametros que quiero que tenga la ruta y le paso la funcion que quiero que ejecute
 @app.get("/Inventario/", tags=["Inventario"]) # creo la ruta para la funcion Inventario
 async def Inventario():
-    content = [Producto.to_dict() for Producto in db.Inventario.lista]
+    content = [db.Producto.to_dict() for producto in db.Inventario.lista]
     return JSONResponse(content=content, headers=headers)
 
 
 @app.get("/Inventario/buscar/{CD}/", tags=["Inventario"]) 
 async def Inventario_buscar(CD: str):
-    Producto = db.Inventario.buscar(CD=CD)
-    if not Producto:
+    producto = db.Inventario.buscar(CD=CD)
+    if not producto:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
-    return JSONResponse(content=Producto.to_dict(), headers=headers)
+    return JSONResponse(content=db.Producto.to_dict(), headers=headers)
 
 
 @app.post("/Inventario/crear/", tags=["Inventario"])
 async def Inventario_crear(datos: ModeloCrearCliente):
-    Producto = db.Inventario.crear(datos.CD, datos.Producto, datos.categoria)
-    if Producto:
-        return JSONResponse(content=Producto.to_dict(), headers=headers)
+    producto = db.Inventario.crear(datos.CD, datos.producto, datos.categoria)
+    if producto:
+        return JSONResponse(content=db.Producto.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
 
 
 @ app.put("/Inventario/actualizar/", tags=["Inventario"])
 async def Inventario_actualizar(datos: ModeloCliente):
     if db.Inventario.buscar(datos.CD):
-        Producto = db.Inventario.modificar(datos.CD, datos.Producto, datos.categoria)
-        if Producto:
-            return JSONResponse(content=Producto.to_dict(), headers=headers)
+        producto = db.Inventario.modificar(datos.CD, datos.producto, datos.categoria)
+        if producto:
+            return JSONResponse(content=db.Producto.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
 
 
 @app.delete("/Inventario/borrar/{CD}/", tags=["Inventario"])
 async def Inventario_borrar(CD: str):
     if db.Inventario.buscar(CD=CD):
-        Producto = db.Inventario.borrar(CD=CD)
-        return JSONResponse(content=Producto.to_dict(), headers=headers)
+        producto = db.Inventario.borrar(CD=CD)
+        return JSONResponse(content=db.Producto.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
 
 print("Servidor de la API...")
