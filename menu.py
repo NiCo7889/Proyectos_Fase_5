@@ -68,9 +68,6 @@ def iniciar(): # Función que inicia el programa y muestra el menú
 
         elif opcion == '6':
             print("Saliendo...\n")
-            
-        elif opcion != '1, 2, 3, 4, 5, 6':
-            print("Opción incorrecta. Introduce una opción válida.\n")
+            break
 
         input("\nPresiona ENTER para continuar...")
-        exit
