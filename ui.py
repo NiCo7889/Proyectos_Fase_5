@@ -58,7 +58,7 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin): # creo la clase CreateCli
         self.producto = producto
         self.categoria = categoria
 
-    def create_client(self):
+    def create_producto(self):
         self.master.treeview.insert(
             parent='', index='end', iid=self.CD.get(),
             values=(self.CD.get(), self.producto.get(), self.categoria.get()))
@@ -151,6 +151,24 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
         self.title("Gestor de Inventario")
         self.build()
         self.center()
+    def delete(self):
+        producto = self.treeview.focus()
+        if producto:
+            campos = self.treeview.item(producto, "values")
+            confirmar = askokcancel(
+                title="Confirmar borrado",
+                message=f"¿Borrar {campos[1]} {campos[2]}?",
+                icon=WARNING)
+            if confirmar:
+                self.treeview.delete(producto)
+                db.Inventario.borrar(campos[0])
+
+    def create(self):
+        CreateClientWindow(self)
+
+    def edit(self):
+        if self.treeview.focus():
+            EditClientWindow(self)
 
     def build(self):
         frame = Frame(self)
@@ -164,7 +182,7 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
         treeview.column("Producto", anchor=CENTER)
         treeview.column("categoria", anchor=CENTER)
 
-        treeview.heading("CD", text="DNI", anchor=CENTER)
+        treeview.heading("CD", text="CD", anchor=CENTER)
         treeview.heading("Producto", text="Producto", anchor=CENTER)
         treeview.heading("categoria", text="categoria", anchor=CENTER)
 
@@ -187,25 +205,6 @@ class MainWindow(Tk, CenterWidgetMixin): # creo la clase MainWindow que hereda d
         Button(frame, text="Borrar", command=self.delete).grid(row=0, column=2)
 
         self.treeview = treeview
-
-    def delete(self):
-        producto = self.treeview.focus()
-        if producto:
-            campos = self.treeview.item(producto, "values")
-            confirmar = askokcancel(
-                title="Confirmar borrado",
-                message=f"¿Borrar {campos[1]} {campos[2]}?",
-                icon=WARNING)
-            if confirmar:
-                self.treeview.delete(producto)
-                db.Inventario.borrar(campos[0])
-
-    def create(self):
-        CreateClientWindow(self)
-
-    def edit(self):
-        if self.treeview.focus():
-            EditClientWindow(self)
 
 
 if __name__ == "__main__": # ejecuto el programa
